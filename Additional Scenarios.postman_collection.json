@@ -1,0 +1,228 @@
+{
+	"info": {
+		"_postman_id": "0a5e17b9-7724-4646-9008-6be3aa784c98",
+		"name": "Additional Scenarios",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28101375",
+		"_collection_link": "https://cloudy-firefly-552256.postman.co/workspace/3e79ba23-61a0-4826-844c-c0cf99695d7b/collection/28101375-0a5e17b9-7724-4646-9008-6be3aa784c98?action=share&creator=28101375&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "AdditionalScenarios-UsingPre-request_Script",
+			"item": [
+				{
+					"name": "Jun23-Status200-SDET_001-Creating User with 201-addscenario",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var programName = \"Jun23-Status200-SDET-\"+ parseInt(Math.random()*1000);\r",
+									"pm.environment.set(\"programName\",programName);\r",
+									"\r",
+									"var random_description = \"Testing Phase -\" +  parseInt(Math.random()*1000);\r",
+									"console.log(random_description);\r",
+									"pm.environment.set(\"programDescription\",random_description);\r",
+									"\r",
+									"var programStatus = \"InActive\";\r",
+									"console.log(programStatus);\r",
+									"pm.environment.set(\"programStatus\",programStatus);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"POST Request\", function () {\r",
+									"   var jsonData = pm.response.json();\r",
+									"   console.log(jsonData.programName);\r",
+									"   pm.environment.set(\"programName\", jsonData.programName);\r",
+									"   console.log(jsonData.programId);\r",
+									"   pm.environment.set(\"programId\",jsonData.programId)\r",
+									"   pm.environment.set(\"programDescription\", jsonData.programName);\r",
+									"   pm.environment.set(\"programStatus\", jsonData.programStatus);\r",
+									"  console.log(jsonData.programDescription);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Status code name has string\", ()=> {\r",
+									"    pm.response.to.have.status(\"Created\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", ()=> {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type header is application/json\", ()=> {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection header is keep-alive\", ()=> {\r",
+									"    pm.expect(pm.response.headers.get(\"Connection\")).to.eql('keep-alive');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding header is chunked\", ()=> {\r",
+									"    pm.expect(pm.response.headers.get(\"Transfer-Encoding\")).to.eql('chunked');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 1000ms\", ()=>\r",
+									"{\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Test data type of a response\", ()=> {\r",
+									"    pm.expect(jsonData).to.be.an(\"Object\");\r",
+									"    pm.expect(jsonData.programId).to.be.a(\"number\");\r",
+									"    pm.expect(jsonData.programName).to.be.a(\"String\");\r",
+									"    pm.expect(jsonData.programDescription).to.be.a(\"String\");\r",
+									"    pm.expect(jsonData.programStatus).to.be.a(\"String\");\r",
+									"    \r",
+									"    pm.expect(jsonData.programId).not.eq(\"null\");\r",
+									"    pm.expect(jsonData.programName).not.eq(\"null\");\r",
+									"    pm.expect(jsonData.programStatus).not.eq(\"null\");\r",
+									"\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"programDescription\": \"{{programDescription}}\",\r\n  \"programName\": \"{{programName}}\",\r\n  \"programStatus\": \"{{programStatus}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/saveprogram",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"saveprogram"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Jun23-Status200-SDET_002Batch – CreateBatch_Create_DataDrivenaddscenario",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"var random_string = Math.random().toString(36).substring(2);\r",
+									"\r",
+									"pm.environment.set(\"batchDescription\",random_string);\r",
+									"\r",
+									"const random_noclass = Math.floor((Math.random()*10+1));\r",
+									"pm.environment.set(\"batchNoOfClasses\",random_noclass);\r",
+									"\r",
+									"const randomnum = Math.floor((Math.random()*1000+1));\r",
+									"//console.log(randomnum)\r",
+									"\r",
+									"var BatchName = \"Jun23-Status200-SDET-SDET\"+randomnum+\"-\"+randomnum;\r",
+									"\r",
+									"pm.environment.set(\"fullbatchName\",BatchName);\r",
+									"pm.environment.set(\"batchStatus\",\"Active\");\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code name has string\", ()=> {\r",
+									"    pm.response.to.have.status(\"Created\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", ()=> {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type header is application/json\", ()=> {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql('application/json');\r",
+									"});\r",
+									"pm.test(\"Connection header is keep-alive\", ()=> {\r",
+									"    pm.expect(pm.response.headers.get(\"Connection\")).to.eql('keep-alive');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Transfer-Encoding header is chunked\", ()=> {\r",
+									"    pm.expect(pm.response.headers.get(\"Transfer-Encoding\")).to.eql('chunked');\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"m.test(\"Test data type of a response\", ()=> {\r",
+									"    pm.expect(jsonData).to.be.an(\"Object\");\r",
+									"    pm.expect(Number.isInteger(jsonData.batchId)).to.be.true;\r",
+									"    pm.expect(jsonData.batchName).to.be.a(\"String\");\r",
+									"    pm.expect(jsonData.batchDescription).to.be.a(\"String\");\r",
+									"    pm.expect(jsonData.batchStatus).to.be.a(\"String\");\r",
+									"    pm.expect(jsonData.batchNoOfClasses).to.be.above(0);\r",
+									"    pm.expect(Number.isInteger(jsonData.batchNoOfClasses)).to.be.true;\r",
+									"   pm.environment.set(\"batchId\", jsonData.batchId);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n  \"batchDescription\": \"{{batchDescription}}\",\r\n  \"batchName\": \"{{fullbatchName}}\",\r\n  \"batchNoOfClasses\": {{batchNoOfClasses}},\r\n  \"batchStatus\": \"{{batchStatus}}\", \r\n  \"programId\": {{programID}}\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/lms/batches",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"lms",
+								"batches"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
